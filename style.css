@@ -1,0 +1,290 @@
+:root { /* Define as variáveis globais do tema escuro padrão (Noite Natalina) */
+  --bg-topo: #061224; /* Cor superior do céu noturno */
+  --bg-base: #102a43; /* Cor inferior do céu próximo ao horizonte */
+  --cartao-bg: rgba(15, 35, 62, 0.72); /* Fundo semitransparente do cartão de homenagem */
+  --cartao-borda: rgba(250, 204, 21, 0.28); /* Borda dourada suave dos cartões */
+  --texto-principal: #f8fafc; /* Cor clara para títulos e textos principais */
+  --texto-secundario: #cbd5e1; /* Cor suavizada para descrições e subtítulos */
+  --destaque-ouro: #facc15; /* Amarelo-ouro usado em brilhos e detalhes */
+  --destaque-vermelho: #dc2626; /* Vermelho natalino usado em botões de ação */
+  --destaque-vermelho-hover: #b91c1c; /* Tom de vermelho ao passar o mouse */
+  --botao-bg: rgba(255, 255, 255, 0.1); /* Fundo translúcido dos botões do topo */
+  --botao-hover: rgba(250, 204, 21, 0.22); /* Destaque dos botões do topo no hover */
+  --sombra-cartao: 0 24px 60px rgba(0, 0, 0, 0.45); /* Sombra profunda para elevar o cartão */
+} /* Encerra as variáveis do tema escuro */
+
+body.tema-claro { /* Sobrescreve as variáveis quando o usuário ativa o tema claro */
+  --bg-topo: #bae6fd; /* Céu azul claro de manhã de inverno */
+  --bg-base: #f0f9ff; /* Base quase branca remetendo à neve */
+  --cartao-bg: rgba(255, 255, 255, 0.84); /* Cartão branco translúcido */
+  --cartao-borda: rgba(185, 28, 28, 0.22); /* Borda avermelhada delicada */
+  --texto-principal: #0f172a; /* Texto azul-marinho escuro para alto contraste */
+  --texto-secundario: #334155; /* Texto secundário em cinza-ardósia */
+  --destaque-ouro: #b45309; /* Dourado mais fechado para leitura confortável no fundo claro */
+  --botao-bg: rgba(15, 23, 42, 0.08); /* Fundo suave para botões no tema claro */
+  --botao-hover: rgba(220, 38, 38, 0.14); /* Hover avermelhado suave nos botões */
+  --sombra-cartao: 0 20px 45px rgba(15, 23, 42, 0.14); /* Sombra mais leve para o modo claro */
+} /* Encerra as variáveis do tema claro */
+
+* { /* Aplica reset básico a todos os elementos da página */
+  margin: 0; /* Remove margens padrão dos navegadores */
+  padding: 0; /* Remove espaçamentos internos padrão */
+  box-sizing: border-box; /* Inclui borda e padding no cálculo de largura e altura */
+} /* Encerra o reset global */
+
+body { /* Estiliza o corpo principal da página */
+  min-height: 100vh; /* Garante que a página ocupe no mínimo toda a altura da tela */
+  font-family: 'Plus Jakarta Sans', sans-serif; /* Define a fonte principal limpa e moderna */
+  color: var(--texto-principal); /* Aplica a cor de texto conforme o tema ativo */
+  background: linear-gradient(180deg, var(--bg-topo) 0%, var(--bg-base) 100%); /* Cria o gradiente vertical do céu */
+  overflow-x: hidden; /* Impede barra de rolagem horizontal quando o trenó entra ou sai da tela */
+  display: flex; /* Usa Flexbox para empilhar cabeçalho, conteúdo e rodapé */
+  flex-direction: column; /* Alinha os blocos principais verticalmente */
+  transition: background 0.4s ease, color 0.3s ease; /* Suaviza a transição entre tema claro e escuro */
+} /* Encerra os estilos do body */
+
+#canvas-neve { /* Estiliza a camada de neve em tela cheia */
+  position: fixed; /* Mantém a neve cobrindo a janela mesmo ao rolar */
+  inset: 0; /* Fixa topo, direita, base e esquerda em 0 */
+  width: 100%; /* Ocupa toda a largura da janela */
+  height: 100%; /* Ocupa toda a altura da janela */
+  pointer-events: none; /* Permite clicar nos botões abaixo do canvas sem bloqueio */
+  z-index: 1; /* Posiciona a neve atrás do conteúdo interativo */
+} /* Encerra o estilo do canvas de neve */
+
+#papai-noel-treno { /* Estiliza o contêiner voador do Papai Noel e seu trenó */
+  position: fixed; /* Mantém o trenó no topo visível da janela */
+  top: 76px; /* Posiciona o trajeto logo abaixo do cabeçalho */
+  left: 0; /* Define a origem horizontal para o deslocamento via transform */
+  transform: translateX(-360px); /* Mantém o trenó escondido fora da borda esquerda antes do voo */
+  pointer-events: none; /* Evita interferir nos cliques do usuário */
+  z-index: 3; /* Faz o trenó passar sobre o fundo com destaque visual */
+  filter: drop-shadow(0 8px 18px rgba(250, 204, 21, 0.35)); /* Adiciona brilho dourado suave sob o trenó */
+} /* Encerra o estilo do contêiner do trenó */
+
+#papai-noel-treno.voando { /* Classe ativada pelo JS a cada 4 segundos para disparar o voo */
+  animation: vooTreno 3.7s linear forwards; /* Executa a travessia completa em 3,7s deixando margem limpa para o ciclo de 4s */
+} /* Encerra a classe de animação do trenó */
+
+@keyframes vooTreno { /* Define o trajeto suave e ondulado do trenó no céu */
+  0% { transform: translateX(-360px) translateY(16px) rotate(-3deg); opacity: 0.95; } /* Entra pela esquerda inclinado para cima */
+  25% { transform: translateX(25vw) translateY(-14px) rotate(1deg); opacity: 1; } /* Sobe suavemente no primeiro quarto da tela */
+  50% { transform: translateX(52vw) translateY(10px) rotate(-2deg); opacity: 1; } /* Faz uma leve ondulação no centro */
+  75% { transform: translateX(80vw) translateY(-12px) rotate(2deg); opacity: 1; } /* Ganha altitude ao se aproximar da direita */
+  100% { transform: translateX(calc(100vw + 360px)) translateY(6px) rotate(0deg); opacity: 0.9; } /* Sai completamente pela borda direita */
+} /* Encerra os quadros-chave do voo do trenó */
+
+.barra-superior { /* Estiliza o cabeçalho da página */
+  position: relative; /* Mantém o cabeçalho em sua camada própria */
+  z-index: 5; /* Garante prioridade de clique acima da neve e do trenó */
+  display: flex; /* Alinha marca e botões na horizontal */
+  justify-content: space-between; /* Separa a marca à esquerda e os controles à direita */
+  align-items: center; /* Centraliza os itens verticalmente */
+  flex-wrap: wrap; /* Permite quebra organizada de linha em telas pequenas */
+  gap: 14px; /* Define espaçamento entre os grupos do topo */
+  padding: 18px 6%; /* Aplica respiro interno proporcional à tela */
+} /* Encerra o estilo do cabeçalho */
+
+.marca { /* Estiliza o bloco da marca no canto esquerdo */
+  display: flex; /* Coloca ícone e texto lado a lado */
+  align-items: center; /* Alinha verticalmente o floco e o texto */
+  gap: 10px; /* Espaça o ícone do título */
+} /* Encerra o estilo da marca */
+
+.icone-marca { /* Estiliza o floco de neve da marca */
+  font-size: 1.7rem; /* Define tamanho destacado para o ícone */
+  color: var(--destaque-ouro); /* Aplica a cor dourada do tema */
+} /* Encerra o estilo do ícone da marca */
+
+.titulo-marca { /* Estiliza o nome da página no cabeçalho */
+  font-family: 'Mountains of Christmas', cursive; /* Usa fonte natalina estilizada */
+  font-size: 1.9rem; /* Define tamanho legível e expressivo */
+  letter-spacing: 1px; /* Amplia levemente o espaçamento entre letras */
+} /* Encerra o estilo do título da marca */
+
+.controles-topo { /* Estiliza a barra de botões de mídia e acessibilidade */
+  display: flex; /* Dispõe os botões em linha */
+  flex-wrap: wrap; /* Adapta os botões em múltiplas linhas no celular */
+  gap: 10px; /* Define distância uniforme entre os botões */
+} /* Encerra o estilo da barra de controles */
+
+.btn-controle { /* Estiliza cada botão secundário do cabeçalho */
+  background: var(--botao-bg); /* Usa fundo translúcido coerente com o tema */
+  color: var(--texto-principal); /* Mantém contraste adequado do rótulo */
+  border: 1px solid var(--cartao-borda); /* Adiciona contorno fino e elegante */
+  border-radius: 999px; /* Deixa o botão em formato pílula */
+  padding: 9px 16px; /* Garante boa área clicável */
+  font-size: 0.9rem; /* Define tamanho confortável da fonte */
+  font-weight: 600; /* Destaca o texto do botão */
+  cursor: pointer; /* Exibe ponteiro de mão ao passar o mouse */
+  backdrop-filter: blur(8px); /* Aplica desfoque vítreo atrás do botão */
+  transition: transform 0.2s ease, background 0.2s ease; /* Suaviza microinterações de clique e hover */
+} /* Encerra o estilo dos botões do topo */
+
+.btn-controle:hover { /* Estiliza o estado hover dos botões do topo */
+  background: var(--botao-hover); /* Destaca o fundo ao passar o mouse */
+  transform: translateY(-2px); /* Eleva sutilmente o botão */
+} /* Encerra o hover dos botões do topo */
+
+.conteudo-principal { /* Estiliza o contêiner principal de duas colunas */
+  position: relative; /* Permite controlar o empilhamento com z-index */
+  z-index: 4; /* Posiciona o conteúdo acima da neve e do trenó */
+  flex: 1; /* Faz a área principal ocupar o espaço disponível entre topo e rodapé */
+  width: min(1200px, 92%); /* Limita a largura máxima mantendo margens laterais */
+  margin: 28px auto; /* Centraliza horizontalmente e cria respiro vertical */
+  display: grid; /* Usa CSS Grid para layout lado a lado */
+  grid-template-columns: 1.15fr 0.85fr; /* Dá leve prioridade espacial ao cartão de homenagem */
+  align-items: center; /* Centraliza verticalmente texto e árvore */
+  gap: 36px; /* Define espaço generoso entre as colunas */
+} /* Encerra o estilo do conteúdo principal */
+
+.cartao-homenagem { /* Estiliza o cartão de vidro fosco da homenagem */
+  background: var(--cartao-bg); /* Aplica o fundo translúcido definido na variável */
+  border: 1px solid var(--cartao-borda); /* Aplica borda sutil dourada ou rubi */
+  border-radius: 26px; /* Arredonda generosamente os cantos do cartão */
+  padding: 38px; /* Cria espaço interno confortável */
+  backdrop-filter: blur(14px); /* Produz o efeito glassmorphism sofisticado */
+  box-shadow: var(--sombra-cartao); /* Aplica sombra projetada */
+} /* Encerra o estilo do cartão de homenagem */
+
+.selo-natal { /* Estiliza a etiqueta decorativa acima do título */
+  display: inline-block; /* Permite aplicar padding mantendo largura do conteúdo */
+  padding: 6px 14px; /* Espaça o texto internamente */
+  border-radius: 999px; /* Deixa o selo arredondado */
+  background: rgba(220, 38, 38, 0.22); /* Fundo vermelho suave translúcido */
+  color: var(--destaque-ouro); /* Texto dourado chamativo */
+  font-size: 0.82rem; /* Tamanho compacto de etiqueta */
+  font-weight: 700; /* Negrito para destaque */
+  text-transform: uppercase; /* Converte o texto para letras maiúsculas */
+  letter-spacing: 1.2px; /* Amplia o espaçamento entre letras */
+  margin-bottom: 16px; /* Separa o selo do título principal */
+} /* Encerra o estilo do selo */
+
+.titulo-principal { /* Estiliza o título principal da landing page */
+  font-family: 'Mountains of Christmas', cursive; /* Usa fonte festiva de alto impacto */
+  font-size: clamp(2.4rem, 4.4vw, 3.8rem); /* Escala fluidamente conforme o tamanho da tela */
+  line-height: 1.08; /* Mantém entrelinha compacta para títulos grandes */
+  color: var(--destaque-ouro); /* Aplica cor dourada ao título */
+  margin-bottom: 18px; /* Cria separação antes do parágrafo */
+} /* Encerra o estilo do título principal */
+
+.mensagem-principal { /* Estiliza o texto principal da homenagem */
+  font-size: 1.05rem; /* Garante leitura confortável */
+  line-height: 1.72; /* Dá boa respiração entre linhas */
+  color: var(--texto-secundario); /* Usa tom suave de excelente contraste */
+  margin-bottom: 26px; /* Separa o texto da grade de votos */
+} /* Encerra o estilo da mensagem principal */
+
+.grade-votos { /* Estiliza a grade dos três mini-cartões de desejos */
+  display: grid; /* Organiza os desejos em colunas iguais */
+  grid-template-columns: repeat(3, 1fr); /* Cria três colunas proporcionais */
+  gap: 14px; /* Define o espaçamento entre os cartões */
+  margin-bottom: 28px; /* Separa a grade dos botões de ação */
+} /* Encerra o estilo da grade de votos */
+
+.item-voto { /* Estiliza cada cartão individual de desejo */
+  background: rgba(255, 255, 255, 0.06); /* Cria leve destaque de fundo */
+  border: 1px solid var(--cartao-borda); /* Adiciona borda fina */
+  border-radius: 16px; /* Arredonda os cantos do mini-cartão */
+  padding: 16px; /* Aplica espaçamento interno */
+} /* Encerra o estilo do item de voto */
+
+.item-voto h2 { /* Estiliza o título interno de cada desejo */
+  font-size: 0.98rem; /* Tamanho proporcional ao mini-cartão */
+  color: var(--destaque-ouro); /* Cor dourada de destaque */
+  margin-bottom: 6px; /* Pequeno espaço antes da descrição */
+} /* Encerra o estilo do subtítulo do desejo */
+
+.item-voto p { /* Estiliza a descrição de cada desejo */
+  font-size: 0.85rem; /* Fonte levemente menor para hierarquia visual */
+  line-height: 1.5; /* Mantém boa legibilidade */
+  color: var(--texto-secundario); /* Aplica cor secundária do tema */
+} /* Encerra o estilo do texto do desejo */
+
+.acoes-hero { /* Estiliza a barra de ação inferior do cartão */
+  display: flex; /* Alinha botão principal e indicador do trenó lado a lado */
+  flex-wrap: wrap; /* Permite empilhar em telas estreitas */
+  align-items: center; /* Centraliza os elementos verticalmente */
+  gap: 16px; /* Define espaço entre o botão e o contador */
+} /* Encerra o estilo das ações */
+
+.btn-primario { /* Estiliza o botão principal de chamada para ação */
+  background: var(--destaque-vermelho); /* Fundo vermelho natalino vibrante */
+  color: #ffffff; /* Texto branco de máximo contraste */
+  border: none; /* Remove borda padrão */
+  border-radius: 14px; /* Cantos suavemente arredondados */
+  padding: 14px 24px; /* Tamanho robusto de destaque */
+  font-size: 0.98rem; /* Tamanho legível do rótulo */
+  font-weight: 700; /* Negrito para força visual */
+  cursor: pointer; /* Indica elemento interativo */
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.38); /* Sombra avermelhada brilhante */
+  transition: transform 0.2s ease, background 0.2s ease; /* Suaviza hover e clique */
+} /* Encerra o estilo do botão primário */
+
+.btn-primario:hover { /* Estiliza o estado hover do botão principal */
+  background: var(--destaque-vermelho-hover); /* Escurece levemente o vermelho */
+  transform: translateY(-2px); /* Eleva o botão no hover */
+} /* Encerra o hover do botão primário */
+
+.indicador-treno { /* Estiliza o selo informativo do intervalo de 4 segundos */
+  font-size: 0.88rem; /* Tamanho discreto e informativo */
+  color: var(--texto-secundario); /* Cor secundária harmoniosa */
+  font-weight: 600; /* Peso seminegrito para facilitar leitura rápida */
+} /* Encerra o estilo do indicador do trenó */
+
+.palco-arvore { /* Estiliza a coluna direita que exibe a árvore de Natal */
+  display: flex; /* Usa Flexbox para centralizar o SVG */
+  justify-content: center; /* Centraliza horizontalmente a árvore */
+  align-items: center; /* Centraliza verticalmente a árvore */
+} /* Encerra o estilo do palco da árvore */
+
+#svg-arvore { /* Estiliza o desenho vetorial da árvore */
+  width: min(390px, 100%); /* Define largura generosa sem estourar telas pequenas */
+  height: auto; /* Mantém a proporção original do viewBox */
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.4)); /* Projeta sombra realista atrás da árvore */
+} /* Encerra o estilo do SVG da árvore */
+
+.halo-estrela { /* Anima o halo luminoso atrás da estrela do topo */
+  animation: pulsarEstrela 2.2s ease-in-out infinite; /* Alterna suavemente o brilho em ciclo contínuo */
+  transform-origin: 160px 48px; /* Centraliza a escala exatamente no meio da estrela */
+} /* Encerra a animação do halo */
+
+@keyframes pulsarEstrela { /* Define os quadros-chave da pulsação da estrela */
+  0%, 100% { opacity: 0.65; transform: scale(0.92); } /* Estado mais suave nas extremidades */
+  50% { opacity: 1; transform: scale(1.16); } /* Pico luminoso no meio do ciclo */
+} /* Encerra os quadros-chave da estrela */
+
+.luz-led { /* Estiliza cada lâmpada colorida gerada pelo JavaScript na árvore */
+  animation: piscarLuz 1.4s ease-in-out infinite; /* Faz cada LED piscar continuamente */
+  transform-box: fill-box; /* Usa a própria área do círculo como referência de transformação */
+  transform-origin: center; /* Expande o brilho a partir do centro exato da lâmpada */
+} /* Encerra o estilo base das luzes */
+
+body.modo-festa .luz-led { /* Acelera o pisca-pisca quando o modo festa está ativo */
+  animation-duration: 0.45s; /* Reduz o tempo do ciclo para efeito festivo rápido */
+} /* Encerra o modificador do modo festa */
+
+body.modo-suave .luz-led { /* Deixa o pisca-pisca mais lento e relaxante no modo suave */
+  animation-duration: 2.8s; /* Aumenta a duração do ciclo para transição lenta */
+} /* Encerra o modificador do modo suave */
+
+@keyframes piscarLuz { /* Define o efeito de acender e apagar das luzes da árvore */
+  0%, 100% { opacity: 0.25; transform: scale(0.85); filter: brightness(0.7); } /* Lâmpada quase apagada */
+  50% { opacity: 1; transform: scale(1.25); filter: brightness(1.7); } /* Lâmpada acesa no brilho máximo */
+} /* Encerra os quadros-chave das luzes */
+
+.rodape { /* Estiliza o rodapé da página */
+  position: relative; /* Mantém o rodapé acima do canvas de neve */
+  z-index: 4; /* Garante legibilidade sobre os flocos */
+  text-align: center; /* Centraliza a frase final */
+  padding: 18px 20px 26px; /* Aplica espaçamento confortável */
+  font-size: 0.88rem; /* Tamanho discreto de rodapé */
+  color: var(--texto-secundario); /* Usa a cor secundária do tema */
+} /* Encerra o estilo do rodapé */
+
+@media (max-width: 900px) { /* Ajusta o layout para tablets e celulares */
+  .conteudo-principal { grid-template-columns: 1fr; text-align: center; } /* Empilha texto e árvore em coluna única */
+  .grade-votos { grid-template-columns: 1fr; } /* Empilha os três cartões de desejos verticalmente */
+  .acoes-hero { justify-content: center; } /* Centraliza o botão principal e o contador */
+  .cartao-homenagem { padding: 26px 20px; } /* Reduz o espaçamento interno em telas menores */
+} /* Encerra a regra de responsividade */
